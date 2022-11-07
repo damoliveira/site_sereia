@@ -24,6 +24,22 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700&display=swap" rel="stylesheet"
     type="text/css" />
 
+  <!-- Google Analytics -->
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+  <!-- End Google Analytics -->
+
+
   <!-- Theme CSS -->
   <style>
     body {
@@ -928,6 +944,40 @@
 
 <body id="page-top" class="index">
   <img src="images/balloon.svg" id="call-me-baby" />
+
+  <!--Inicio banhytics-->
+  <script>
+    (function (tn, tc, cn, sn) {
+      window[tn] = window[tn] || {
+        status: "loading_code",
+        code: tc,
+        cookieName: cn,
+        queue: [],
+        send: function (a, d) {
+          d = d || {};
+          window[tn].queue.push({
+            a: a,
+            d: Object.assign(d, { timestamp: Date.now() })
+          });
+        }
+      };
+
+      if (window[tn].status == "loading_code") {
+        window[tn].status = "waiting_script";
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://script.google.com/macros/s/" + tc + "/dev/library?tn=" + tn + "&sn=" + sn;
+        document.body.appendChild(s);
+      }
+    })("tracker", "AKfycbzeYzAAMhfoaRoDZoZF4MRgBYYAvs-r3RH59ViRJ0oLoUk2yxSdndtIUQwNtR7szZnB", "_trackerCk", "DanielOliveira");
+    //https://script.google.com/a/macros/raccoon.ag/s/AKfycbzeYzAAMhfoaRoDZoZF4MRgBYYAvs-r3RH59ViRJ0oLoUk2yxSdndtIUQwNtR7szZnB/exec
+
+    window["tracker"].send("pageview", {
+      'cd1': 'Source Code'
+    });
+  </script>
+  <!--Final banhytics -->
+
   <!-- Navigation -->
   <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
     <div class="container">
@@ -1328,6 +1378,7 @@
   <script src="assets/jquery.easing.min.js"
     integrity="sha384-mE6eXfrb8jxl0rzJDBRanYqgBxtJ6Unn4/1F7q4xRRyIw7Vdg9jP4ycT7x1iVsgb"
     crossorigin="anonymous"></script>
+
 
   <script>
     (function ($) {
@@ -2377,6 +2428,7 @@
       });
     }, 5000);
 
+
     //Evento de Scroll Até o Final da Página
     document.addEventListener('scroll', function () {
       var alturaAtual = Math.round(window.scrollY + document.documentElement.clientHeight);
@@ -2385,7 +2437,13 @@
         document.body.offsetHeight, document.documentElement.offsetHeight,
         document.body.clientHeight, document.documentElement.clientHeight
       );
-      if (alturaAtual == alturaTotal) { console.log('>>> Rolou até o final') }
+      if (alturaAtual == alturaTotal) {
+        console.log('>>> Rolou até o final'), tracker.send('event', //Exercício 1 hardcoded
+          {
+            'category': 'scroll',
+            'label': 'Rolou até o final da página',
+          })
+      }
 
     });
 
@@ -2398,15 +2456,13 @@
     // Evento de IntersectionObserver no popup de Fale com o atendente
     var callMeBaby = document.getElementById('call-me-baby');
     const intersectionObserver = new IntersectionObserver((entries) => {
-
       if (entries[0].isIntersecting) {
         console.log('Visualizou FALE COM UM ATENDENTE');
       }
-
-
     });
     // start observing
     intersectionObserver.observe(callMeBaby);
+
 
     // Evento de Verificação de Change nos campos de Input do Fomulário
     var nome = document.getElementById('name');
@@ -2438,44 +2494,146 @@
     campForm.addEventListener('change', function (e) {
       var target = e.target;
       var campo = target.getAttribute('id');
-
       if (target.getAttribute('aria-invalid') != "true") {
         target.preenchido = 'true';
       }
-
       var campos = ['name', 'email', 'phone', 'address', 'message'];
       if (campos.every(function (campo) {
         return document.getElementById(campo).preenchido;
       })) {
         console.log('preencheu todo formulário');
       }
-
     });
 
-    //Evento Click no Menu
+    //Evento Click no Menu - Exercício 5 hardcoded
     var menu = document.querySelector('ul.nav.navbar-nav.navbar-right');
     menu.addEventListener('click', function (e) {
-      console.log('Clicou no menu', e.target.innerText);
-    })
+      console.log('Clicou no menu', e.target.innerText),
+        tracker.send('click',
+          {
+            'category': 'click',
+            'label': `Interagiu com o menu superior - ${e.target.innerText}`,
+          });
+    });
 
     //Visualização Banheiro
-
-    //currentSrc
-
     var banheiro = document.querySelector('img.img-circle.img-responsive');
     const intersectionObserver2 = new IntersectionObserver((entries) => {
 
-      if (entries[0].isIntersecting) { console.log('Visualizou o banheiro');
-      intersectionObserver2.disconnect();
-    }
+      if (entries[0].isIntersecting) {
+        console.log('Visualizou o banheiro');
+        // intersectionObserver2.disconnect(); //desativa a função observer
+      }
+    });
+    intersectionObserver2.observe(banheiro);
+
+    // Visualização Do Form/Contato - Exercício 2 hardcoded
+    const intersectionObserverForm = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log('Visualizou o formulário de contato'), tracker.send('pageview',
+          {
+            'category': 'view',
+            'label': 'Visualizou o formulário de contato',
+          });
+      }
+    });
+    // start observing
+    intersectionObserverForm.observe(campForm);
+
+    document.querySelector('form#contactForm').addEventListener('submit', (evt) => {
+
+      let inome = nome.validity.valid;
+      let iemail = email.validity.valid;
+      let iphone = phone.validity.valid;
+      let iaddress = address.validity.valid;
+      let imessage = message.validity.valid
+      let cd2='';
+      let status='';
+
+      if(inome === false  || iemail === false || iphone === false || iaddress === false || imessage === false){
+        cd2='erro';
+         status= 'erro';
+
+      }else {
+        cd2='sucess';
+         status= 'sucess';
+
+      }
+
+
+      tracker.send('event', {
+        'action': 'submit',
+        'category': 'form',
+        'label': status,
+        'cd2':status,
+      })
+    })
+
+    //verificando as mudanças no form
+    campForm.addEventListener('change', function (e) {
+      var changeTarget = e.target;
+      var changeId = changeTarget.getAttribute('id');
+      console.log('Começou a Preencher o o formulário pelo campo', changeId,
+        tracker.send('event', {
+          'action': 'change',
+          'category': 'formulário',
+          'label': `Começou a Preencher o o formulário pelo campo ${changeId}`,
+        }));
+    });
+
+    /*var testandoSucesso=document.querySelector('div.alert.alert-success');
+    const intersectionObserverSendForm = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log('testando sucesso'), tracker.send('event',
+          {
+            'category': 'click',
+            'label': 'fomulário enviado com sucesso',
+          });
+      }
+    });
+    // start observing
+    intersectionObserverSendForm.observe(testandoSucesso);*/
+
+    //Interação Mídias DEV e Site
+    var socialBts = document.querySelector('#team > div > div:nth-child(2)');
+    socialBts.addEventListener('click', function (e) {
+      var icon = e.target;
+      var iconClass = icon.getAttribute('class');
+      e.preventDefault();
+      console.log(iconClass);
+      tracker.send('event', {
+        'action': 'click',
+        'category': 'link midia',
+        'label': iconClass.slice(6),
+        "value": "DEV",
+      })
 
     });
 
+    // se o target for filho de ul.list-inline.social-buttons disparar 
+    var socialBtsFooter = document.querySelector('#page-top > footer > div > div > div:nth-child(2)>ul');
+    socialBtsFooter.addEventListener('click', function (e) {
+      var icon = e.target;
+      var iconClass = icon.getAttribute('class');
+      e.preventDefault();
+      console.log(iconClass);
+      tracker.send('event', {
+        'action': 'click',
+        'category': 'link midia',
+        'label': iconClass.slice(6),
+        "value": "DEV",
+      })
 
-    intersectionObserver2.observe(banheiro);
+    });
 
-
-
+    // verificando tempo de Visualização da pagina
+    setTimeout(function () {
+      console.log('Visualizou a pagina por 60sec'), tracker.send('pageview',
+        {
+          'category': 'timeView',
+          'label': 'visualização 60 sec',
+        });
+    }, 60000)
   </script>
 </body>
 
